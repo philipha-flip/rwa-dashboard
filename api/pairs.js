@@ -34,6 +34,82 @@ function classify(raw) {
   return "Unclassified";
 }
 
+// ═══════════════════════════════════════════
+// Claude AI 분류
+// ═══════════════════════════════════════════
+async function classifyWithAI(tickers, log) {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey || tickers.length === 0) {
+    if (!apiKey) log.push("⚠️ AI분류: ANTHROPIC_API_KEY 미설정");
+    return {};
+  }
+
+  // 최대 200개만 (비용 관리)
+  const batch = tickers.slice(0, 200);
+  log.push(`🤖 AI분류: ${batch.length}개 티커 분류 요청 중...`);
+
+  const prompt = `You are a financial instrument classifier. Classify each ticker into EXACTLY one category.
+
+Categories:
+- Stock: Individual company equity (single company ticker like AAPL, TSLA)
+- Commodities: Physical assets (gold, silver, oil, gas, metals, agricultural)
+- Index: Market indices combining multiple stocks (SPX, NASDAQ, NIKKEI)
+- ETF: Exchange-traded funds tracking indices/themes (SPY, QQQ, ARKK)
+- Forex: Currency pairs and macro economic variables (EUR/USD, GBP)
+- Crypto: Cryptocurrency tokens (if you think it's crypto)
+- Unknown: Cannot determine with confidence
+
+Tickers to classify:
+${batch.join(", ")}
+
+Respond ONLY with a JSON object mapping each ticker to its category. No explanation, no markdown, no backticks. Example:
+{"AAPL":"Stock","XAU":"Commodities","SPX":"Index"}`;
+
+  try {
+    const r = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01"
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 4096,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    if (!r.ok) {
+      log.push(`❌ AI분류: HTTP ${r.status}`);
+      return {};
+    }
+
+    const data = await r.json();
+    const text = (data.content || []).map(c => c.text || "").join("");
+    const cleaned = text.replace(/```json|```/g, "").trim();
+    const result = JSON.parse(cleaned);
+
+    // Crypto나 Unknown은 제외, 나머지만 반환
+    const valid = {};
+    let classified = 0;
+    for (const [ticker, cat] of Object.entries(result)) {
+      if (["Stock", "Commodities", "Index", "ETF", "Forex"].includes(cat)) {
+        valid[ticker.toUpperCase()] = cat;
+        classified++;
+      }
+    }
+    log.push(`✅ AI분류: ${classified}개 분류됨, ${batch.length - classified}개 제외(Crypto/Unknown)`);
+    return valid;
+  } catch (e) {
+    log.push(`❌ AI분류: ${e.message}`);
+    return {};
+  }
+}
+
+// ═══════════════════════════════════════════
+// 거래소 API 호출
+// ═══════════════════════════════════════════
 async function safeFetch(url, opts = {}) {
   const ctrl = new AbortController();
   const timeout = setTimeout(() => ctrl.abort(), 8000);
@@ -42,10 +118,7 @@ async function safeFetch(url, opts = {}) {
     clearTimeout(timeout);
     if (!r.ok) throw new Error("HTTP " + r.status);
     return await r.json();
-  } catch (e) {
-    clearTimeout(timeout);
-    throw e;
-  }
+  } catch (e) { clearTimeout(timeout); throw e; }
 }
 
 async function fetchExchange(name, url, parser, suffix = "USDT", opts = {}) {
@@ -75,7 +148,6 @@ async function fetchHL() {
       const cls = classify(a.name);
       if (cls) pairs.push({ ex: "Hyperliquid", type: cls, pair: a.name + "-USDC", ticker: a.name });
     }
-    // Try perpDexs
     try {
       const dexes = await safeFetch("https://api.hyperliquid.xyz/info", {
         method: "POST", headers: { "Content-Type": "application/json" },
@@ -120,6 +192,9 @@ function getManualPairs() {
   return m.map(r => ({ ex: r[0], type: r[1], pair: r[2], ticker: r[3] }));
 }
 
+// ═══════════════════════════════════════════
+// 메인 핸들러
+// ═══════════════════════════════════════════
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=600");
@@ -127,7 +202,7 @@ export default async function handler(req, res) {
   const t0 = Date.now();
   const log = [];
 
-  // Tier 1: 모든 거래소 병렬 호출
+  // Tier 1: 병렬 호출
   const jobs = [
     fetchExchange("Binance", "https://fapi.binance.com/fapi/v1/exchangeInfo", d => (d.symbols||[]).filter(s=>s.status==="TRADING").map(s=>s.symbol)),
     fetchExchange("OKX", "https://www.okx.com/api/v5/public/instruments?instType=SWAP", d => (d.data||[]).map(s=>s.instId)),
@@ -148,7 +223,6 @@ export default async function handler(req, res) {
     fetchExchange("XT.COM", "https://fapi.xt.com/future/market/v1/public/symbol/list", d => (d.result||[]).map(s=>(s.symbol||"").toUpperCase())),
     fetchExchange("Pionex", "https://api.pionex.com/api/v1/common/symbols", d => (d.data&&d.data.symbols||[]).map(s=>s.baseCurrency||"")),
     fetchExchange("WEEX", "https://api.weex.com/api/v2/mix/market/tickers?productType=USDT-FUTURES", d => (d.data||[]).map(s=>s.symbol||"")),
-    // DEX
     fetchExchange("ApeX Protocol", "https://pro.apex.exchange/api/v2/symbols", d => (d.data||[]).map(s=>(s.symbol||"").replace("-USDC","").replace("-USDT","")), "USDC"),
     fetchExchange("Backpack", "https://api.backpack.exchange/api/v1/markets", d => (d||[]).map(s=>(s.symbol||"").replace("_USDC_PERP","").replace("_USDC","")), "USDC"),
     fetchExchange("Vest Markets", "https://serverprod.vest.exchange/v2/exchangeInfo", d => (d.symbols||[]).map(s=>(s.symbol||"").replace("-PERP","")), "USDC", { headers: { "xrestservermm": "restserver0" } }),
@@ -171,13 +245,43 @@ export default async function handler(req, res) {
   const existKeys = new Set(allPairs.map(p => p.ex + "|" + p.ticker));
   let manualAdded = 0;
   for (const m of manual) {
-    if (!existKeys.has(m.ex + "|" + m.ticker)) {
-      allPairs.push(m);
-      existKeys.add(m.ex + "|" + m.ticker);
-      manualAdded++;
-    }
+    if (!existKeys.has(m.ex + "|" + m.ticker)) { allPairs.push(m); existKeys.add(m.ex + "|" + m.ticker); manualAdded++; }
   }
   log.push(`📋 수동: ${manualAdded}`);
+
+  // ═══════════════════════════════════════
+  // AI 분류: Unclassified 티커 수집 → Claude 호출
+  // ═══════════════════════════════════════
+  const unclassifiedTickers = [...new Set(
+    allPairs.filter(p => p.type === "Unclassified").map(p => p.ticker)
+  )];
+
+  if (unclassifiedTickers.length > 0) {
+    log.push(`❓ Unclassified: ${unclassifiedTickers.length}개 발견`);
+    const aiResults = await classifyWithAI(unclassifiedTickers, log);
+
+    // AI 결과 적용
+    let reclassified = 0;
+    for (const p of allPairs) {
+      if (p.type === "Unclassified" && aiResults[p.ticker]) {
+        p.type = aiResults[p.ticker];
+        reclassified++;
+      }
+    }
+    // AI가 Crypto로 판단한 것 제거
+    const cryptoTickers = new Set();
+    for (const [ticker, cat] of Object.entries(aiResults)) {
+      if (cat === "Crypto") cryptoTickers.add(ticker);
+    }
+    // Crypto로 재분류된 건 아예 리스트에서 빼진 않고 "Unclassified"로 유지
+    // (이미 aiResults에 Crypto는 포함 안 됨)
+
+    if (reclassified > 0) log.push(`🏷️ 재분류: ${reclassified}개 페어 업데이트됨`);
+
+    // 여전히 Unclassified인 것들 (AI가 Unknown/Crypto로 판단)
+    const stillUnc = allPairs.filter(p => p.type === "Unclassified").length;
+    if (stillUnc > 0) log.push(`⚪ 미분류 잔여: ${stillUnc}개 (Crypto 또는 판별 불가)`);
+  }
 
   // 중복 제거
   const seen = new Set();
@@ -195,11 +299,9 @@ export default async function handler(req, res) {
     return ta !== tb ? ta - tb : a.ticker.localeCompare(b.ticker);
   });
 
-  // 날짜 (서버리스라 추적 불가, 오늘 날짜로 통일)
   const today = new Date().toISOString().split("T")[0];
   const pairs = deduped.map(p => ({ ...p, date: today, isNew: false }));
 
-  // 메타
   const exC = {}, tyC = {};
   pairs.forEach(p => { exC[p.ex] = (exC[p.ex] || 0) + 1; tyC[p.type] = (tyC[p.type] || 0) + 1; });
   const sec = ((Date.now() - t0) / 1000).toFixed(1);
@@ -213,6 +315,7 @@ export default async function handler(req, res) {
       info: `Total: ${pairs.length} | ${sec}s`,
       exchangeCounts: exC,
       typeCounts: tyC,
+      aiClassified: unclassifiedTickers.length,
     },
     log,
   });
