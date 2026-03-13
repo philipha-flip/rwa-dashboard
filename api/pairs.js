@@ -1,4 +1,4 @@
-export const config = { maxDuration: 60 };
+export const config = { maxDuration: 10 };
 
 const CRYPTO_LIST = ["BTC","ETH","SOL","XRP","ADA","DOT","AVAX","LINK","UNI","AAVE","MATIC","ARB","OP","SUI","APT","SEI","TIA","JUP","WIF","PEPE","BONK","HYPE","PENDLE","ENA","EIGEN","DOGE","SHIB","FLOKI","MEME","WLD","FET","RENDER","RNDR","TAO","NEAR","FIL","ICP","INJ","TRX","TON","NOT","DOGS","HMSTR","CATI","ATOM","OSMO","LTC","BCH","ETC","XLM","ALGO","HBAR","VET","THETA","FTM","SAND","MANA","AXS","GALA","IMX","BLUR","APE","LDO","RPL","SSV","ANKR","GRT","OCEAN","AGIX","JASMY","CHZ","ENJ","DYDX","CRV","MKR","SNX","COMP","YFI","SUSHI","1INCH","BAL","ZRX","ENS","RUNE","KAVA","CAKE","JOE","GMX","GNS","RDNT","MAGIC","PERP","STX","ORDI","SATS","1000SATS","KAS","BOME","MEW","POPCAT","BRETT","TURBO","MYRO","ONDO","PYTH","JTO","W","STRK","ZK","BLAST","MANTA","ALT","PIXEL","PORTAL","AEVO","ETHFI","REZ","BB","IO","ZRO","LISTA","NEIRO","CELO","CKB","SC","ZEN","ZEC","DASH","XMR","DCR","KDA","AR","STORJ","MASK","RSR","DENT","HOT","ONE","ICX","IOTA","XTZ","FLOW","EGLD","ROSE","CRO","BNB","LEO","OKB","FTT","HT","GT","MX","KCS","NEXO","BSV","BTG","RVN","FLUX","ERG","CFX","ACH","API3","BAND","COTI","CTSI","DODO","HIGH","HOOK","ID","LEVER","LINA","LIT","LOOM","MDT","MTL","NKN","NTRN","OMG","ONT","PHB","QNT","QTUM","RAD","RLC","SKL","SLP","SNT","SPELL","STG","STMX","SXP","SYN","T","TFUEL","TLM","TRB","TWT","UMA","UNFI","WIN","WOO","XEC","XVS","YGG","ZIL","LQTY","MAV","MNT","CYBER","ACE","XAI","MAVIA","DYM","SUPER","RONIN","RON","AXL","TNSR","SAGA","OMNI","PRIME","PEOPLE","RARE","SUN","UTK","COMBO","EDU","ARKM","BIGTIME","SLERF","WEN","JITO","KMNO","CLOUD","GRASS","MOODENG","GOAT","PNUT","ACT","VIRTUAL","AI16Z","ZEREBRO","FARTCOIN","SWARMS","COOKIE","DEEP","ANIME","LAYER","TST","KAITO","IP","BERA","MOVE","FORM","S","BABY","B3","FUN","ORCA","DRIFT","PRCL","MOBILE","RAY","TRUMP","MELANIA","LIBRA","VINE","USDT","USDC","DAI","USDE","FDUSD","TUSD","BUSD","USDP","FRAX","LUSD","GUSD","WBTC","WETH","STETH","WSTETH","CBETH","RETH","WEETH","RSETH","EZETH","METH","MSOL","PURR","FRIEND","TOSHI","MODE","ZETA","PUMP","GIGA","PUPS","DOG","PONKE","MOTHER","BILLY","RATS","MUBI","SCRT","GRAIL","VELA","KWENTA","CELESTIA"];
 const STOCKS_LIST = ["TSLA","NVDA","AAPL","MSFT","GOOG","GOOGL","AMZN","META","COIN","MSTR","PLTR","HOOD","CRCL","INTC","AMD","ORCL","MU","UNH","BABA","ASML","ACN","MCD","NFLX","IBM","RDDT","FUTU","LLY","CSCO","MRVL","TSM","MA","SMCI","ARM","V","JPM","GS","BAC","DIS","PYPL","SQ","SHOP","UBER","ABNB","SNOW","CRWD","NET","DDOG","ZS","WMT","COST","TGT","PFE","MRNA","JNJ","BA","LMT","RTX","XOM","CVX","RIOT","MARA","CLSK","HUT","BTBT","GME","AMC","NIO","RIVN","LCID","SOFI","RBLX","SNAP","ROKU","PINS","SPOT","SBET","GLXY","SKHX","DELL","AVGO","CRM","NOW","PANW","ADBE","ANET","QCOM","TXN","KLAC","LRCX","SNPS","CDNS","MELI","SE","PDD","JD","GRAB","CPNG","KO","PEP","NKE","SBUX","CMG","DASH","DKNG","WYNN","MGM","LVS","CELH","MNST","RACE","TM","SONY","BIDU","BILI","TME","XPEV","LI","IONQ","RGTI","QUBT","OKLO","VST","CEG","SMR","NNE","LEU","CCJ","RKLB","LUNR","ACHR","JOBY","CRSP","NTLA","BEAM","EDIT"];
@@ -112,7 +112,7 @@ Respond ONLY with a JSON object mapping each ticker to its category. No explanat
 // ═══════════════════════════════════════════
 async function safeFetch(url, opts = {}) {
   const ctrl = new AbortController();
-  const timeout = setTimeout(() => ctrl.abort(), 8000);
+  const timeout = setTimeout(() => ctrl.abort(), 4000);
   try {
     const r = await fetch(url, { ...opts, signal: ctrl.signal });
     clearTimeout(timeout);
@@ -258,25 +258,22 @@ export default async function handler(req, res) {
 
   if (unclassifiedTickers.length > 0) {
     log.push(`❓ Unclassified: ${unclassifiedTickers.length}개 발견`);
-    const aiResults = await classifyWithAI(unclassifiedTickers, log);
 
-    // AI 결과 적용
-    let reclassified = 0;
-    for (const p of allPairs) {
-      if (p.type === "Unclassified" && aiResults[p.ticker]) {
-        p.type = aiResults[p.ticker];
-        reclassified++;
+    // 10초 제한 내에서만 AI 호출 (남은 시간 3초 이상일 때만)
+    const elapsed = (Date.now() - t0) / 1000;
+    if (elapsed < 6 && process.env.ANTHROPIC_API_KEY) {
+      const aiResults = await classifyWithAI(unclassifiedTickers, log);
+      let reclassified = 0;
+      for (const p of allPairs) {
+        if (p.type === "Unclassified" && aiResults[p.ticker]) {
+          p.type = aiResults[p.ticker];
+          reclassified++;
+        }
       }
+      if (reclassified > 0) log.push(`🏷️ 재분류: ${reclassified}개 페어 업데이트됨`);
+    } else {
+      log.push(`⏭️ AI분류 스킵 (시간부족: ${elapsed.toFixed(1)}s 경과)`);
     }
-    // AI가 Crypto로 판단한 것 제거
-    const cryptoTickers = new Set();
-    for (const [ticker, cat] of Object.entries(aiResults)) {
-      if (cat === "Crypto") cryptoTickers.add(ticker);
-    }
-    // Crypto로 재분류된 건 아예 리스트에서 빼진 않고 "Unclassified"로 유지
-    // (이미 aiResults에 Crypto는 포함 안 됨)
-
-    if (reclassified > 0) log.push(`🏷️ 재분류: ${reclassified}개 페어 업데이트됨`);
 
     // 여전히 Unclassified인 것들 (AI가 Unknown/Crypto로 판단)
     const stillUnc = allPairs.filter(p => p.type === "Unclassified").length;
