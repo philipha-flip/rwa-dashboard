@@ -1,212 +1,405 @@
-const CRYPTO_LIST = ["BTC","ETH","SOL","XRP","ADA","DOT","AVAX","LINK","UNI","AAVE","MATIC","ARB","OP","SUI","APT","SEI","TIA","JUP","WIF","PEPE","BONK","HYPE","PENDLE","ENA","EIGEN","DOGE","SHIB","FLOKI","MEME","WLD","FET","RENDER","RNDR","TAO","NEAR","FIL","ICP","INJ","TRX","TON","NOT","DOGS","HMSTR","CATI","ATOM","OSMO","LTC","BCH","ETC","XLM","ALGO","HBAR","VET","THETA","FTM","SAND","MANA","AXS","GALA","IMX","BLUR","APE","LDO","RPL","SSV","ANKR","GRT","OCEAN","AGIX","JASMY","CHZ","ENJ","DYDX","CRV","MKR","SNX","COMP","YFI","SUSHI","1INCH","BAL","ZRX","ENS","RUNE","KAVA","CAKE","JOE","GMX","GNS","RDNT","MAGIC","PERP","STX","ORDI","SATS","1000SATS","KAS","BOME","MEW","POPCAT","BRETT","TURBO","MYRO","ONDO","PYTH","JTO","W","STRK","ZK","BLAST","MANTA","ALT","PIXEL","PORTAL","AEVO","ETHFI","REZ","BB","IO","ZRO","LISTA","NEIRO","CELO","CKB","SC","ZEN","ZEC","DASH","XMR","DCR","KDA","AR","STORJ","MASK","RSR","DENT","HOT","ONE","ICX","IOTA","XTZ","FLOW","EGLD","ROSE","CRO","BNB","LEO","OKB","FTT","HT","GT","MX","KCS","NEXO","BSV","BTG","RVN","FLUX","ERG","CFX","ACH","API3","BAND","COTI","CTSI","DODO","HIGH","HOOK","ID","LEVER","LINA","LIT","LOOM","MDT","MTL","NKN","NTRN","OMG","ONT","PHB","QNT","QTUM","RAD","RLC","SKL","SLP","SNT","SPELL","STG","STMX","SXP","SYN","T","TFUEL","TLM","TRB","TWT","UMA","UNFI","WIN","WOO","XEC","XVS","YGG","ZIL","LQTY","MAV","MNT","CYBER","ACE","XAI","MAVIA","DYM","SUPER","RONIN","RON","AXL","TNSR","SAGA","OMNI","PRIME","PEOPLE","RARE","SUN","UTK","COMBO","EDU","ARKM","BIGTIME","SLERF","WEN","JITO","KMNO","CLOUD","GRASS","MOODENG","GOAT","PNUT","ACT","VIRTUAL","AI16Z","ZEREBRO","FARTCOIN","SWARMS","COOKIE","DEEP","ANIME","LAYER","TST","KAITO","IP","BERA","MOVE","FORM","S","BABY","B3","FUN","ORCA","DRIFT","PRCL","MOBILE","RAY","TRUMP","MELANIA","LIBRA","VINE","USDT","USDC","DAI","USDE","FDUSD","TUSD","BUSD","USDP","FRAX","LUSD","GUSD","WBTC","WETH","STETH","WSTETH","CBETH","RETH","WEETH","RSETH","EZETH","METH","MSOL","PURR","FRIEND","TOSHI","MODE","ZETA","PUMP","GIGA","PUPS","DOG","PONKE","MOTHER","BILLY","RATS","MUBI","SCRT","GRAIL","VELA","KWENTA","CELESTIA"];
-const STOCKS_LIST = ["TSLA","NVDA","AAPL","MSFT","GOOG","GOOGL","AMZN","META","COIN","MSTR","PLTR","HOOD","CRCL","INTC","AMD","ORCL","MU","UNH","BABA","ASML","ACN","MCD","NFLX","IBM","RDDT","FUTU","LLY","CSCO","MRVL","TSM","MA","SMCI","ARM","V","JPM","GS","BAC","DIS","PYPL","SQ","SHOP","UBER","ABNB","SNOW","CRWD","NET","DDOG","ZS","WMT","COST","TGT","PFE","MRNA","JNJ","BA","LMT","RTX","XOM","CVX","RIOT","MARA","CLSK","HUT","BTBT","GME","AMC","NIO","RIVN","LCID","SOFI","RBLX","SNAP","ROKU","PINS","SPOT","SBET","GLXY","SKHX","DELL","AVGO","CRM","NOW","PANW","ADBE","ANET","QCOM","TXN","KLAC","LRCX","SNPS","CDNS","MELI","SE","PDD","JD","GRAB","CPNG","KO","PEP","NKE","SBUX","CMG","DASH","DKNG","WYNN","MGM","LVS","CELH","MNST","RACE","TM","SONY","BIDU","BILI","TME","XPEV","LI","IONQ","RGTI","QUBT","OKLO","VST","CEG","SMR","NNE","LEU","CCJ","RKLB","LUNR","ACHR","JOBY","CRSP","NTLA","BEAM","EDIT"];
-const COMMODITIES_LIST = ["XAU","GOLD","GLD","XAG","SILVER","SLV","XPT","PLATINUM","XPD","PALLADIUM","WTI","CRUDE","CL","BRENT","BCO","OIL","NATGAS","NG","GAS","COPPER","HG","CU","WHEAT","ZW","CORN","ZC","SOYBEAN","SOY","SUGAR","SB","COFFEE","KC","COCOA","CC","COTTON","CT","URANIUM","LITHIUM","NICKEL","ALUMINUM","ZINC"];
-const INDICES_LIST = ["SPX","SPX500","SP500","US500","NAS","NAS100","NDX","NASDAQ","US30","DJI","DOW","DJIA","UK100","FTSE","JP225","NIKKEI","NI225","DE40","DAX","GER40","AU200","ASX200","HK50","HSI","FR40","CAC","EU50","STOXX","SX5E","US2000","RUSSELL","RTY","VIX","CN50","CHINA50","A50","NIFTY","SENSEX","KOSPI","XYZ100"];
-const ETFS_LIST = ["SPY","QQQ","IWM","DIA","EEM","EFA","TLT","HYG","LQD","GDX","ARKK","ARKG","ARKW","ARKF","IBIT","GBTC","ETHA","FBTC","XLF","XLE","XLK","XLV","XLI","XLY","XLP","XLU","XLB","XLRE","VOO","VTI","SOXL","SOXS","TQQQ","SQQQ","UPRO","SPXU","MSOS","YOLO","BOTZ","HACK","SCHD","JEPI","JEPQ","BITO","BITQ"];
-const FX_LIST = ["EURUSD","GBPUSD","USDJPY","AUDUSD","NZDUSD","USDCAD","USDCHF","EURGBP","EURJPY","GBPJPY","AUDJPY","CADJPY","CHFJPY","NZDJPY","EURAUD","EURNZD","EURCAD","EURCHF","GBPAUD","GBPNZD","GBPCAD","AUDNZD","AUDCAD","USDMXN","USDSGD","USDCNH","USDZAR","USDTRY","EUR","GBP","JPY","AUD","NZD","CAD","CHF","MXN","ZAR","TRY","DXY","SGD","HKD","CNY","CNH","SEK","NOK","DKK","PLN","BRL","INR"];
+import React, { useState, useEffect, useCallback } from "react";
 
-const CRYPTO = {}, STOCKS = {}, COMMODITIES = {}, INDICES = {}, ETFS = {}, FX = {};
-CRYPTO_LIST.forEach(t => CRYPTO[t] = true);
-STOCKS_LIST.forEach(t => STOCKS[t] = true);
-COMMODITIES_LIST.forEach(t => COMMODITIES[t] = true);
-INDICES_LIST.forEach(t => INDICES[t] = true);
-ETFS_LIST.forEach(t => ETFS[t] = true);
-FX_LIST.forEach(t => FX[t] = true);
+const API_URL = "/api/pairs";
+const API_URL2 = "/api/pairs?phase=2";
 
-function clean(sym) {
-  return (sym || "").toUpperCase().replace(/[-_\/]/g, "")
-    .replace(/USDT$/, "").replace(/BUSD$/, "").replace(/USD$/, "").replace(/USDC$/, "")
-    .replace(/^PF_/, "").replace(/^PI_/, "").replace(/^FI_/, "")
-    .replace(/^XBT/, "BTC").replace(/USDTM$/, "").replace(/USDM$/, "")
-    .replace(/PERP$/, "").trim();
+const TYPE_COLORS = {
+  Stock: { bg: "#10b981", light: "#d1fae5", text: "#065f46" },
+  Commodities: { bg: "#f59e0b", light: "#fef3c7", text: "#92400e" },
+  Index: { bg: "#8b5cf6", light: "#ede9fe", text: "#5b21b6" },
+  ETF: { bg: "#3b82f6", light: "#dbeafe", text: "#1e40af" },
+  Forex: { bg: "#ec4899", light: "#fce7f3", text: "#9d174d" },
+  Unclassified: { bg: "#6b7280", light: "#f3f4f6", text: "#374151" },
+};
+
+const FLOW_STEPS = [
+  { id: 1, title: "RWA_DB 읽기", desc: "사용자가 수정한 분류 반영. 첫 실행 시 자동 생성.", icon: "📂" },
+  { id: 2, title: "기존 날짜 보존", desc: "Sheet16의 기존 First Detected 날짜를 메모리에 저장.", icon: "📅" },
+  { id: 3, title: "크립토 블랙리스트", desc: "CoinGecko 상위 1000개 크립토 → 블랙리스트 구축.", icon: "🚫" },
+  { id: 4, title: "Tier 1: Direct API", desc: "~26개 거래소 API 직접 호출. 크립토 아닌 것 = RWA.", icon: "⚡" },
+  { id: 5, title: "Tier 2: CoinGecko", desc: "Tier 1에 없는 거래소 ~5개를 CoinGecko로 추가 수집.", icon: "🦎" },
+  { id: 6, title: "Tier 3: 수동", desc: "API 없는 소규모 거래소 하드코딩.", icon: "✍️" },
+  { id: 7, title: "중복 제거 + 정렬", desc: "거래소|티커 기준 dedup → 정렬.", icon: "🔄" },
+  { id: 8, title: "신규 감지", desc: "First Detected 비교 → NEW 마킹 + DB 갱신.", icon: "🆕" },
+  { id: 9, title: "Sheet16 출력", desc: "헤더 + 데이터 + 색상 + 메타정보 기록.", icon: "📊" },
+];
+
+const PAGE_SIZE = 50;
+
+function PieChart({ data }) {
+  const total = data.reduce((s, d) => s + d.value, 0);
+  if (!total) return null;
+  let cum = 0;
+  const sz = 170, cx = sz / 2, cy = sz / 2, r = 68;
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+      <svg width={sz} height={sz}>
+        {data.map((d, i) => {
+          const st = cum / total; cum += d.value; const en = cum / total;
+          const sa = st * 2 * Math.PI - Math.PI / 2, ea = en * 2 * Math.PI - Math.PI / 2;
+          const x1 = cx + r * Math.cos(sa), y1 = cy + r * Math.sin(sa);
+          const x2 = cx + r * Math.cos(ea), y2 = cy + r * Math.sin(ea);
+          return <path key={i} d={`M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${en - st > 0.5 ? 1 : 0} 1 ${x2},${y2} Z`} fill={d.color} stroke="#fff" strokeWidth={2} />;
+        })}
+      </svg>
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        {data.map((d, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12 }}>
+            <div style={{ width: 10, height: 10, borderRadius: 2, background: d.color, flexShrink: 0 }} />
+            <span>{d.label}</span>
+            <span style={{ color: "#9ca3af", fontWeight: 600 }}>{d.value}</span>
+            <span style={{ color: "#d1d5db", fontSize: 10 }}>({((d.value / total) * 100).toFixed(1)}%)</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
-function classify(raw) {
-  const t = (raw || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
-  if (!t || CRYPTO[t]) return null;
-  if (FX[t]) return "Forex";
-  if (ETFS[t]) return "ETF";
-  if (INDICES[t]) return "Index";
-  if (COMMODITIES[t]) return "Commodities";
-  if (STOCKS[t]) return "Stock";
-  return "Unclassified";
+function BarChart({ data }) {
+  if (!data.length) return null;
+  const mx = Math.max(...data.map(d => d.value));
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 3, maxHeight: 400, overflowY: "auto" }}>
+      {data.slice(0, 25).map((d, i) => (
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11 }}>
+          <div style={{ width: 100, textAlign: "right", color: "#6b7280", flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.label}</div>
+          <div style={{ flex: 1, height: 18, background: "#f3f4f6", borderRadius: 4, overflow: "hidden" }}>
+            <div style={{ width: `${(d.value / mx) * 100}%`, height: "100%", background: "linear-gradient(90deg,#6366f1,#8b5cf6)", borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 6, color: "#fff", fontSize: 10, fontWeight: 600, minWidth: 28 }}>{d.value}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-async function f(url, opts = {}) {
-  const c = new AbortController();
-  const tm = setTimeout(() => c.abort(), 3000);
-  try {
-    const r = await fetch(url, { ...opts, signal: c.signal });
-    clearTimeout(tm);
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    return await r.json();
-  } catch (e) { clearTimeout(tm); throw e; }
-}
+function App() {
+  const [tab, setTab] = useState("dashboard");
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState(null);
+  const [pairs, setPairs] = useState([]);
+  const [meta, setMeta] = useState({});
+  const [filterEx, setFilterEx] = useState("ALL");
+  const [filterType, setFilterType] = useState("ALL");
+  const [search, setSearch] = useState("");
+  const [pg, setPg] = useState(1);
 
-async function ex(name, url, parser, sfx = "USDT", opts = {}) {
-  try {
-    const syms = parser(await f(url, opts));
-    const res = [];
-    for (const s of syms) {
-      const t = clean(s), cls = classify(t);
-      if (cls) res.push({ ex: name, type: cls, pair: t + "-" + sfx, ticker: t });
-    }
-    return { name, ok: true, c: res.length, pairs: res };
-  } catch (e) {
-    return { name, ok: false, err: e.message, pairs: [] };
-  }
-}
-
-async function hlMain() {
-  try {
-    const r = await f("https://api.hyperliquid.xyz/info", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "meta" })
-    });
-    const p = [];
-    for (const a of (r.universe || [])) {
-      const cls = classify(a.name);
-      if (cls) p.push({ ex: "Hyperliquid", type: cls, pair: a.name + "-USDC", ticker: a.name });
-    }
-    // perpDexs (서브 DEX)
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setErr(null);
     try {
-      const dexes = await f("https://api.hyperliquid.xyz/info", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "perpDexs" })
-      });
-      for (const d of (dexes || [])) {
-        if (!d || !d.name) continue;
-        try {
-          const m = await f("https://api.hyperliquid.xyz/info", {
-            method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ type: "meta", dex: d.name })
-          });
-          for (const a of (m.universe || [])) {
-            const cls = classify(a.name);
-            if (cls) p.push({ ex: "Hyperliquid - " + d.name, type: cls, pair: a.name + "-USDC", ticker: a.name });
+      // Phase 1: 주요 거래소 10개 + 수동
+      const r1 = await fetch(API_URL);
+      if (!r1.ok) throw new Error("HTTP " + r1.status);
+      const j1 = await r1.json();
+      if (j1.error) throw new Error(j1.error);
+
+      let allPairs = [...(j1.pairs || [])];
+      setPairs(allPairs);
+      setMeta(j1.meta || {});
+      setLoading(false);
+
+      // Phase 2: 나머지 거래소 (백그라운드)
+      try {
+        const r2 = await fetch(API_URL2);
+        if (r2.ok) {
+          const j2 = await r2.json();
+          allPairs = [...allPairs, ...(j2.pairs || [])];
+          const seen2 = new Set(), deduped2 = [];
+          for (const p of allPairs) {
+            const k = p.ex + "|" + p.ticker;
+            if (!seen2.has(k)) { seen2.add(k); deduped2.push(p); }
           }
-        } catch (e) {}
+          allPairs = deduped2;
+          const exC = {}, tyC = {};
+          allPairs.forEach(p => { exC[p.ex]=(exC[p.ex]||0)+1; tyC[p.type]=(tyC[p.type]||0)+1; });
+          setPairs(allPairs);
+          setMeta(prev => ({ ...prev, total: allPairs.length, info: `Total: ${allPairs.length} pairs`, exchangeCounts: exC, typeCounts: tyC }));
+        }
+      } catch(e2) {}
+
+      // Phase 3: AI 분류 — Unclassified 티커 수집 → Claude 호출
+      const uncTickers = [...new Set(allPairs.filter(p => p.type === "Unclassified").map(p => p.ticker))];
+      if (uncTickers.length > 0) {
+        try {
+          const r3 = await fetch("/api/classify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tickers: uncTickers })
+          });
+          if (r3.ok) {
+            const j3 = await r3.json();
+            const cls = j3.classifications || {};
+            const updated = allPairs.map(p => {
+              if (p.type === "Unclassified" && cls[p.ticker]) {
+                return { ...p, type: cls[p.ticker] };
+              }
+              return p;
+            });
+            const removedTickers = new Set((j3.removed || []).filter(r => r.reason === "Crypto").map(r => r.ticker.toUpperCase()));
+            allPairs = updated.filter(p => !(p.type === "Unclassified" && removedTickers.has(p.ticker)));
+            const exC3 = {}, tyC3 = {};
+            allPairs.forEach(p => { exC3[p.ex]=(exC3[p.ex]||0)+1; tyC3[p.type]=(tyC3[p.type]||0)+1; });
+            setPairs(allPairs);
+            setMeta(prev => ({
+              ...prev, total: allPairs.length,
+              info: `Total: ${allPairs.length} pairs | AI: ${j3.classified || 0} classified`,
+              exchangeCounts: exC3, typeCounts: tyC3, aiClassified: j3.classified || 0,
+            }));
+          }
+        } catch(e3) {}
       }
-    } catch (e) {}
-    return { name: "Hyperliquid", ok: true, c: p.length, pairs: p };
-  } catch (e) {
-    return { name: "Hyperliquid", ok: false, err: e.message, pairs: [] };
-  }
-}
 
-function manual() {
-  const m = [
-    ["Lighter","Stock","NVDA-USDC","NVDA"],["Lighter","Stock","TSLA-USDC","TSLA"],["Lighter","Stock","AAPL-USDC","AAPL"],["Lighter","Stock","MSFT-USDC","MSFT"],["Lighter","Stock","AMZN-USDC","AMZN"],["Lighter","Stock","META-USDC","META"],["Lighter","Stock","GOOG-USDC","GOOG"],["Lighter","Stock","COIN-USDC","COIN"],["Lighter","Stock","PLTR-USDC","PLTR"],["Lighter","Stock","HOOD-USDC","HOOD"],["Lighter","Stock","MSTR-USDC","MSTR"],["Lighter","Stock","CRCL-USDC","CRCL"],["Lighter","Stock","INTC-USDC","INTC"],["Lighter","Stock","SKHX-USDC","SKHX"],["Lighter","Forex","EUR-USD","EUR"],["Lighter","Forex","GBP-USD","GBP"],["Lighter","Commodities","XAU-USD","XAU"],["Lighter","Commodities","XAG-USD","XAG"],["Lighter","Index","SPX500-USD","SPX500"],["Lighter","ETF","SPY-USD","SPY"],
-    ["edgeX","Stock","NVDA-USDC","NVDA"],["edgeX","Stock","TSLA-USDC","TSLA"],["edgeX","Stock","AAPL-USDC","AAPL"],["edgeX","Stock","COIN-USDC","COIN"],["edgeX","Stock","PLTR-USDC","PLTR"],["edgeX","Stock","HOOD-USDC","HOOD"],["edgeX","Stock","MSTR-USDC","MSTR"],["edgeX","Commodities","XAU-USD","XAU"],
-    ["Aster","Stock","NVDA-USDC","NVDA"],["Aster","Stock","TSLA-USDC","TSLA"],["Aster","Stock","COIN-USDC","COIN"],["Aster","Stock","PLTR-USDC","PLTR"],["Aster","Commodities","XAU-USD","XAU"],["Aster","ETF","SPY-USD","SPY"],
-    ["Avantis","Stock","NVDA-USD","NVDA"],["Avantis","Stock","TSLA-USD","TSLA"],["Avantis","Commodities","XAU-USD","XAU"],["Avantis","Forex","EUR-USD","EUR"],
-    ["Pacifica","Stock","TSLA-USD","TSLA"],["Pacifica","Commodities","XAU-USD","XAU"],
-    ["StandX","Commodities","XAU-USD","XAU"],["StandX","Commodities","XAG-USD","XAG"],
-    ["ADEN","Stock","TSLA-USD","TSLA"],["ADEN","Commodities","XAU-USD","XAU"],
-    ["PriveX","Stock","TSLA-USD","TSLA"],["PriveX","Commodities","XAU-USD","XAU"],
-    ["Gmtrade","Stock","TSLA-USD","TSLA"],["Gmtrade","Commodities","XAU-USD","XAU"],
-    ["SynFutures","Commodities","XAU-USD","XAU"],
-    ["BTCC","Stock","TSLA-USDT","TSLA"],["BTCC","Stock","NVDA-USDT","NVDA"],["BTCC","Stock","AAPL-USDT","AAPL"],["BTCC","Stock","COIN-USDT","COIN"],["BTCC","Stock","PLTR-USDT","PLTR"],["BTCC","Stock","HOOD-USDT","HOOD"],["BTCC","Stock","MSTR-USDT","MSTR"],["BTCC","Stock","INTC-USDT","INTC"],["BTCC","Stock","AMZN-USDT","AMZN"],["BTCC","Stock","GOOG-USDT","GOOG"],["BTCC","Stock","META-USDT","META"],["BTCC","Stock","MSFT-USDT","MSFT"],["BTCC","Stock","AMD-USDT","AMD"],["BTCC","Stock","ORCL-USDT","ORCL"],["BTCC","Commodities","XAU-USDT","XAU"],["BTCC","Commodities","XAG-USDT","XAG"],["BTCC","Commodities","WTI-USDT","WTI"],["BTCC","Index","SPX500-USDT","SPX500"],["BTCC","Index","NAS100-USDT","NAS100"],["BTCC","Index","US30-USDT","US30"],
-    ["CoinW","Commodities","XAU-USDT","XAU"],["CoinW","Commodities","XAG-USDT","XAG"],
-    ["KCEX","Commodities","XAU-USDT","XAU"],["KCEX","Commodities","XAG-USDT","XAG"],
-    ["Gains Network","Stock","TSLA-USD","TSLA"],["Gains Network","Stock","NVDA-USD","NVDA"],["Gains Network","Stock","AAPL-USD","AAPL"],["Gains Network","Stock","AMZN-USD","AMZN"],["Gains Network","Stock","META-USD","META"],["Gains Network","Stock","MSFT-USD","MSFT"],["Gains Network","Stock","GOOG-USD","GOOG"],["Gains Network","Stock","COIN-USD","COIN"],["Gains Network","Stock","PLTR-USD","PLTR"],["Gains Network","Stock","HOOD-USD","HOOD"],["Gains Network","Stock","MSTR-USD","MSTR"],["Gains Network","Commodities","XAU-USD","XAU"],["Gains Network","Commodities","XAG-USD","XAG"],["Gains Network","Commodities","WTI-USD","WTI"],["Gains Network","Index","SPX500-USD","SPX500"],["Gains Network","Index","NAS100-USD","NAS100"],["Gains Network","Forex","EUR-USD","EUR"],["Gains Network","Forex","GBP-USD","GBP"],["Gains Network","Forex","JPY-USD","JPY"],
-    ["Ostium","Stock","TSLA-USD","TSLA"],["Ostium","Stock","NVDA-USD","NVDA"],["Ostium","Stock","AAPL-USD","AAPL"],["Ostium","Stock","AMZN-USD","AMZN"],["Ostium","Stock","META-USD","META"],["Ostium","Stock","MSFT-USD","MSFT"],["Ostium","Stock","GOOG-USD","GOOG"],["Ostium","Stock","COIN-USD","COIN"],["Ostium","Stock","MSTR-USD","MSTR"],["Ostium","Stock","PLTR-USD","PLTR"],["Ostium","Stock","HOOD-USD","HOOD"],["Ostium","Stock","CRCL-USD","CRCL"],["Ostium","Stock","INTC-USD","INTC"],["Ostium","Stock","AMD-USD","AMD"],["Ostium","Stock","ORCL-USD","ORCL"],["Ostium","Commodities","XAU-USD","XAU"],["Ostium","Commodities","XAG-USD","XAG"],["Ostium","Commodities","WTI-USD","WTI"],["Ostium","Commodities","NATGAS-USD","NATGAS"],["Ostium","Commodities","COPPER-USD","COPPER"],["Ostium","Commodities","WHEAT-USD","WHEAT"],["Ostium","Index","SPX500-USD","SPX500"],["Ostium","Index","NAS100-USD","NAS100"],["Ostium","Index","US30-USD","US30"],["Ostium","Index","UK100-USD","UK100"],["Ostium","Index","JP225-USD","JP225"],["Ostium","Index","DE40-USD","DE40"],["Ostium","Index","AU200-USD","AU200"],["Ostium","Index","HK50-USD","HK50"],["Ostium","Index","FR40-USD","FR40"],["Ostium","Forex","EUR-USD","EUR"],["Ostium","Forex","GBP-USD","GBP"],["Ostium","Forex","JPY-USD","JPY"],["Ostium","Forex","AUD-USD","AUD"],["Ostium","Forex","CAD-USD","CAD"],["Ostium","Forex","CHF-USD","CHF"],["Ostium","Forex","NZD-USD","NZD"],["Ostium","Forex","MXN-USD","MXN"],["Ostium","Forex","SGD-USD","SGD"]
-  ];
-  return m.map(r => ({ ex: r[0], type: r[1], pair: r[2], ticker: r[3] }));
-}
-
-// ═══ Phase 1: 빠른 거래소만 ═══
-const PHASE1 = [
-  ["Binance", "https://fapi.binance.com/fapi/v1/exchangeInfo", d => (d.symbols||[]).filter(s=>s.status==="TRADING").map(s=>s.symbol)],
-  ["OKX", "https://www.okx.com/api/v5/public/instruments?instType=SWAP", d => (d.data||[]).map(s=>s.instId)],
-  ["Bitget", "https://api.bitget.com/api/v2/mix/market/tickers?productType=USDT-FUTURES", d => (d.data||[]).map(s=>s.symbol)],
-  ["Gate", "https://api.gateio.ws/api/v4/futures/usdt/contracts", d => (d||[]).map(s=>s.name)],
-  ["KuCoin", "https://api-futures.kucoin.com/api/v1/contracts/active", d => (d.data||[]).map(s=>s.symbol)],
-  ["MEXC", "https://contract.mexc.com/api/v1/contract/detail", d => (d.data||[]).map(s=>s.symbol)],
-  ["Blofin", "https://openapi.blofin.com/api/v1/market/instruments?instType=SWAP", d => (d.data||[]).map(s=>s.instId)],
-  ["BingX", "https://open-api.bingx.com/openApi/swap/v2/quote/contracts", d => (d.data||[]).map(s=>s.symbol)],
-  ["dYdX", "https://indexer.dydx.trade/v4/perpetualMarkets", d => Object.keys(d.markets||{}), "USD"],
-  ["CoinEx", "https://api.coinex.com/v2/futures/market", d => (d.data||[]).map(s=>s.market||"")],
-];
-
-// ═══ Phase 2: 느린 거래소 ═══
-const PHASE2 = [
-  ["HTX", "https://api.hbdm.com/linear-swap-api/v1/swap_contract_info", d => (d.data||[]).map(s=>s.contract_code)],
-  ["Kraken", "https://futures.kraken.com/derivatives/api/v3/instruments", d => (d.instruments||[]).filter(s=>s.tradeable).map(s=>s.symbol)],
-  ["Bitmart", "https://api-cloud.bitmart.com/contract/public/details", d => (d.data&&d.data.symbols||[]).map(s=>s.symbol||"")],
-  ["Phemex", "https://api.phemex.com/public/products", d => { const l=d.data&&d.data.perpProductsV2||d.data&&d.data.products||[]; return l.map(s=>s.symbol||""); }],
-  ["Bitmex", "https://www.bitmex.com/api/v1/instrument/active", d => (d||[]).filter(s=>s.state==="Open").map(s=>s.symbol)],
-  ["Toobit", "https://api.toobit.com/api/v1/contract/public/param", d => (d.result||d.data||[]).map(s=>s.symbol||"")],
-  ["XT.COM", "https://fapi.xt.com/future/market/v1/public/symbol/list", d => (d.result||[]).map(s=>(s.symbol||"").toUpperCase())],
-  ["Pionex", "https://api.pionex.com/api/v1/common/symbols", d => (d.data&&d.data.symbols||[]).map(s=>s.baseCurrency||"")],
-  ["WEEX", "https://api.weex.com/api/v2/mix/market/tickers?productType=USDT-FUTURES", d => (d.data||[]).map(s=>s.symbol||"")],
-  ["Backpack", "https://api.backpack.exchange/api/v1/markets", d => (d||[]).map(s=>(s.symbol||"").replace("_USDC_PERP","").replace("_USDC","")), "USDC"],
-  ["Vest Markets", "https://serverprod.vest.exchange/v2/exchangeInfo", d => (d.symbols||[]).map(s=>(s.symbol||"").replace("-PERP","")), "USDC"],
-  ["ApeX Protocol", "https://pro.apex.exchange/api/v2/symbols", d => (d.data||[]).map(s=>(s.symbol||"").replace("-USDC","").replace("-USDT","")), "USDC"],
-  ["Extended", "https://api.starknet.extended.exchange/api/v1/info/markets", d => { const l=Array.isArray(d)?d:(d.data||d.markets||[]); return l.map(m=>(m.market||m.symbol||m.name||"").replace("-USD","")); }, "USD"],
-  ["Gains Network", "https://backend-gains.gains.trade/api/v1/pairs", d => (d||[]).map(p => p.from||p.name||""), "USD"],
-];
-
-export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=600");
-
-  const phase = req.query.phase || "1";
-  const t0 = Date.now();
-  const log = [];
-  let allPairs = [];
-
-  const list = phase === "2" ? PHASE2 : PHASE1;
-
-  // 병렬 호출
-  const jobs = list.map(([n, u, p, s]) => ex(n, u, p, s || "USDT"));
-  if (phase === "1") jobs.push(hlMain());
-
-  const results = await Promise.allSettled(jobs);
-  for (const r of results) {
-    if (r.status === "fulfilled") {
-      const v = r.value;
-      log.push(v.ok ? `✅ ${v.name}: ${v.c} RWA` : `❌ ${v.name}: ${v.err || "fail"}`);
-      allPairs.push(...v.pairs);
+      // Phase 4: CoinGecko Tier 2 — 추가 거래소 탐색
+      try {
+        const existExNames = [...new Set(allPairs.map(p => p.ex))];
+        const r4 = await fetch("/api/coingecko", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ exchanges: existExNames })
+        });
+        if (r4.ok) {
+          const j4 = await r4.json();
+          if (j4.pairs && j4.pairs.length > 0) {
+            allPairs = [...allPairs, ...j4.pairs];
+            const seen4 = new Set(), deduped4 = [];
+            for (const p of allPairs) {
+              const k = p.ex + "|" + p.ticker;
+              if (!seen4.has(k)) { seen4.add(k); deduped4.push(p); }
+            }
+            allPairs = deduped4;
+            const exC4 = {}, tyC4 = {};
+            allPairs.forEach(p => { exC4[p.ex]=(exC4[p.ex]||0)+1; tyC4[p.type]=(tyC4[p.type]||0)+1; });
+            setPairs(allPairs);
+            setMeta(prev => ({
+              ...prev, total: allPairs.length,
+              info: `Total: ${allPairs.length} pairs (CG +${j4.pairs.length})`,
+              exchangeCounts: exC4, typeCounts: tyC4,
+            }));
+          }
+        }
+      } catch(e4) {}
+    } catch (e) {
+      setErr(e.message);
+      setLoading(false);
     }
+  }, []);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => { setPg(1); }, [filterEx, filterType, search]);
+
+  if (loading) {
+    const isPlaceholder = API_URL.includes("YOUR_DEPLOYMENT_ID");
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#f8fafc", flexDirection: "column", gap: 16 }}>
+        <div style={{ width: 48, height: 48, border: "4px solid #e5e7eb", borderTop: "4px solid #6366f1", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+        <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+        <div style={{ color: "#6b7280", fontSize: 14 }}>Sheet16 데이터 로딩 중...</div>
+        {isPlaceholder && (
+          <div style={{ background: "#fef3c7", border: "1px solid #f59e0b", borderRadius: 8, padding: "12px 20px", maxWidth: 480, fontSize: 13, color: "#92400e" }}>
+            ⚠️ <b>API_URL 미설정!</b> src/App.js 4번째 줄에 Apps Script 배포 URL을 넣어주세요.
+          </div>
+        )}
+      </div>
+    );
   }
 
-  // Phase 1에만 수동 추가
-  if (phase === "1") {
-    const man = manual();
-    const ek = new Set(allPairs.map(p => p.ex + "|" + p.ticker));
-    let mc = 0;
-    for (const m of man) {
-      if (!ek.has(m.ex + "|" + m.ticker)) { allPairs.push(m); ek.add(m.ex + "|" + m.ticker); mc++; }
+  if (err) {
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#f8fafc" }}>
+        <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 12, padding: "24px 32px", maxWidth: 480, textAlign: "center" }}>
+          <div style={{ fontSize: 32, marginBottom: 8 }}>❌</div>
+          <div style={{ fontSize: 16, fontWeight: 600, color: "#991b1b", marginBottom: 8 }}>데이터 로드 실패</div>
+          <div style={{ fontSize: 13, color: "#b91c1c", marginBottom: 16 }}>{err}</div>
+          <div style={{ fontSize: 12, color: "#6b7280", textAlign: "left", lineHeight: 1.7, marginBottom: 16 }}>
+            1. Apps Script에 doGet() 추가했는지 확인<br/>
+            2. 배포 → 웹 앱 → "모든 사용자" 접근 허용<br/>
+            3. API_URL에 올바른 배포 URL 입력
+          </div>
+          <button onClick={fetchData} style={{ padding: "8px 20px", borderRadius: 8, border: "none", background: "#6366f1", color: "#fff", fontWeight: 600, cursor: "pointer" }}>다시 시도</button>
+        </div>
+      </div>
+    );
+  }
+
+  const total = pairs.length;
+  const newC = pairs.filter(p => p.isNew).length;
+  const tyC = meta.typeCounts || {};
+  const exC = meta.exchangeCounts || {};
+  const pieData = Object.entries(tyC).map(([k, v]) => ({ label: k, value: v, color: (TYPE_COLORS[k] || {}).bg || "#999" })).sort((a, b) => b.value - a.value);
+  const barData = Object.entries(exC).map(([k, v]) => ({ label: k, value: v })).sort((a, b) => b.value - a.value);
+  const exList = [...new Set(pairs.map(p => p.ex))].sort();
+  const tyList = [...new Set(pairs.map(p => p.type))].sort();
+
+  const filtered = pairs.filter(p => {
+    if (filterEx !== "ALL" && p.ex !== filterEx) return false;
+    if (filterType !== "ALL" && p.type !== filterType) return false;
+    if (search) {
+      const q = search.toUpperCase();
+      if (!p.ticker.toUpperCase().includes(q) && !p.pair.toUpperCase().includes(q)) return false;
     }
-    log.push(`📋 수동: ${mc}`);
-  }
-
-  // 중복 제거 + 정렬
-  const seen = new Set(), deduped = [];
-  for (const p of allPairs) {
-    const k = p.ex + "|" + p.ticker;
-    if (!seen.has(k)) { seen.add(k); deduped.push(p); }
-  }
-  const ord = { Stock: 0, Commodities: 1, Index: 2, ETF: 3, Forex: 4, Unclassified: 5 };
-  deduped.sort((a, b) => a.ex !== b.ex ? a.ex.localeCompare(b.ex) : (ord[a.type]??9) - (ord[b.type]??9) || a.ticker.localeCompare(b.ticker));
-
-  const today = new Date().toISOString().split("T")[0];
-  const pairs = deduped.map(p => ({ ...p, date: today, isNew: false }));
-
-  const exC = {}, tyC = {};
-  pairs.forEach(p => { exC[p.ex] = (exC[p.ex]||0)+1; tyC[p.type] = (tyC[p.type]||0)+1; });
-
-  res.status(200).json({
-    pairs,
-    phase: Number(phase),
-    meta: {
-      total: pairs.length,
-      updated: new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" }),
-      info: `Phase ${phase}: ${pairs.length} pairs | ${((Date.now()-t0)/1000).toFixed(1)}s`,
-      exchangeCounts: exC,
-      typeCounts: tyC,
-    },
-    log,
+    return true;
   });
+  const totalPg = Math.ceil(filtered.length / PAGE_SIZE);
+  const paged = filtered.slice((pg - 1) * PAGE_SIZE, pg * PAGE_SIZE);
+
+  const tabBtn = (label, key, count) => (
+    <button key={key} onClick={() => setTab(key)} style={{
+      padding: "10px 20px", border: "none",
+      borderBottom: tab === key ? "3px solid #6366f1" : "3px solid transparent",
+      background: tab === key ? "rgba(99,102,241,0.1)" : "transparent",
+      color: tab === key ? "#6366f1" : "#9ca3af",
+      fontWeight: tab === key ? 700 : 500, cursor: "pointer", fontSize: 14,
+      display: "flex", alignItems: "center", gap: 6,
+    }}>
+      {label}
+      {count != null && <span style={{ background: tab === key ? "#6366f1" : "#e5e7eb", color: tab === key ? "#fff" : "#6b7280", borderRadius: 10, padding: "2px 8px", fontSize: 11, fontWeight: 600 }}>{count}</span>}
+    </button>
+  );
+
+  return (
+    <div style={{ fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", background: "#f8fafc", minHeight: "100vh" }}>
+      {/* Header */}
+      <div style={{ background: "linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#4338ca 100%)", padding: "24px 32px", color: "#fff" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+          <div>
+            <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700 }}>
+              🏛️ RWA Perp Pair Updater
+              <span style={{ fontSize: 11, background: "rgba(255,255,255,0.15)", padding: "3px 8px", borderRadius: 6, marginLeft: 8 }}>v6 LIVE</span>
+            </h1>
+            <p style={{ margin: "4px 0 0", fontSize: 13, color: "rgba(255,255,255,0.7)" }}>
+              Sheet16 실시간 연동 · {meta.updated || "N/A"} 기준 · {total.toLocaleString()}개 페어
+            </p>
+          </div>
+          <button onClick={fetchData} style={{ padding: "10px 24px", borderRadius: 8, border: "none", background: "#10b981", color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>🔄 새로고침</button>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div style={{ display: "flex", borderBottom: "1px solid #e5e7eb", background: "#fff", paddingLeft: 16, overflowX: "auto" }}>
+        {tabBtn("📊 대시보드", "dashboard")}
+        {tabBtn("📋 페어 목록", "pairs", total.toLocaleString())}
+        {tabBtn("⚙️ 실행 플로우", "flow")}
+      </div>
+
+      <div style={{ padding: "24px 32px", maxWidth: 1200 }}>
+
+        {/* ===== DASHBOARD ===== */}
+        {tab === "dashboard" && (
+          <div>
+            <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 24 }}>
+              {[
+                { l: "총 RWA 페어", v: total.toLocaleString(), c: "#4338ca" },
+                { l: "신규 감지", v: newC, c: "#10b981" },
+                { l: "거래소 수", v: Object.keys(exC).length, c: "#f59e0b" },
+                { l: "유형 수", v: Object.keys(tyC).length, c: "#ec4899" },
+              ].map((s, i) => (
+                <div key={i} style={{ background: "#fff", borderRadius: 12, padding: "20px 24px", boxShadow: "0 1px 3px rgba(0,0,0,0.08)", border: "1px solid #f3f4f6", flex: 1, minWidth: 140 }}>
+                  <div style={{ fontSize: 12, color: "#9ca3af", fontWeight: 500, marginBottom: 4 }}>{s.l}</div>
+                  <div style={{ fontSize: 28, fontWeight: 700, color: s.c }}>{s.v}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+              <div style={{ background: "#fff", borderRadius: 12, padding: 24, boxShadow: "0 1px 3px rgba(0,0,0,0.08)" }}>
+                <h3 style={{ margin: "0 0 16px", fontSize: 14, color: "#374151" }}>유형별 분포</h3>
+                <PieChart data={pieData} />
+              </div>
+              <div style={{ background: "#fff", borderRadius: 12, padding: 24, boxShadow: "0 1px 3px rgba(0,0,0,0.08)" }}>
+                <h3 style={{ margin: "0 0 16px", fontSize: 14, color: "#374151" }}>거래소별 RWA 페어 수</h3>
+                <BarChart data={barData} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ===== PAIRS TABLE ===== */}
+        {tab === "pairs" && (
+          <div>
+            <div style={{ display: "flex", gap: 12, marginBottom: 16, flexWrap: "wrap", alignItems: "center" }}>
+              <select value={filterEx} onChange={e => setFilterEx(e.target.value)} style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #d1d5db", fontSize: 13, background: "#fff" }}>
+                <option value="ALL">모든 거래소 ({exList.length})</option>
+                {exList.map(ex => <option key={ex} value={ex}>{ex} ({exC[ex] || 0})</option>)}
+              </select>
+              <select value={filterType} onChange={e => setFilterType(e.target.value)} style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #d1d5db", fontSize: 13, background: "#fff" }}>
+                <option value="ALL">모든 유형 ({tyList.length})</option>
+                {tyList.map(t => <option key={t} value={t}>{t} ({tyC[t] || 0})</option>)}
+              </select>
+              <input placeholder="🔍 티커 검색..." value={search} onChange={e => setSearch(e.target.value)} style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #d1d5db", fontSize: 13, width: 180 }} />
+              <span style={{ fontSize: 12, color: "#9ca3af" }}>{filtered.length.toLocaleString()}개</span>
+            </div>
+
+            <div style={{ background: "#fff", borderRadius: 12, overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,0.08)" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                <thead>
+                  <tr style={{ background: "#1e1b4b", color: "#fff" }}>
+                    {["#", "Exchange", "Type", "Pair", "Ticker", "First Detected"].map((h, i) => (
+                      <th key={i} style={{ padding: "10px 12px", textAlign: "left", fontSize: 12 }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {paged.map((p, i) => {
+                    const tc = TYPE_COLORS[p.type] || TYPE_COLORS.Unclassified;
+                    const rowNum = (pg - 1) * PAGE_SIZE + i + 1;
+                    return (
+                      <tr key={i} style={{ borderBottom: "1px solid #f3f4f6", background: p.isNew ? "#fffbeb" : i % 2 === 0 ? "#fff" : "#fafafa" }}>
+                        <td style={{ padding: "7px 12px", color: "#9ca3af", fontSize: 11 }}>{rowNum}</td>
+                        <td style={{ padding: "7px 12px", fontWeight: 500 }}>{p.ex}</td>
+                        <td style={{ padding: "7px 12px" }}>
+                          <span style={{ display: "inline-block", padding: "2px 10px", borderRadius: 12, background: tc.light, color: tc.text, fontSize: 11, fontWeight: 600 }}>{p.type}</span>
+                        </td>
+                        <td style={{ padding: "7px 12px", fontFamily: "monospace", fontSize: 12 }}>{p.pair}</td>
+                        <td style={{ padding: "7px 12px", fontWeight: 600 }}>{p.ticker}</td>
+                        <td style={{ padding: "7px 12px" }}>
+                          {p.date}
+                          {p.isNew && <span style={{ background: "#fbbf24", color: "#92400e", padding: "1px 6px", borderRadius: 4, fontSize: 10, fontWeight: 700, marginLeft: 6 }}>NEW</span>}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination */}
+            {totalPg > 1 && (
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 8, marginTop: 16 }}>
+                <button onClick={() => setPg(p => Math.max(1, p - 1))} disabled={pg === 1}
+                  style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid #d1d5db", background: pg === 1 ? "#f3f4f6" : "#fff", cursor: pg === 1 ? "default" : "pointer", fontSize: 13 }}>◀ 이전</button>
+                <span style={{ fontSize: 13, color: "#6b7280" }}>{pg} / {totalPg}</span>
+                <button onClick={() => setPg(p => Math.min(totalPg, p + 1))} disabled={pg === totalPg}
+                  style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid #d1d5db", background: pg === totalPg ? "#f3f4f6" : "#fff", cursor: pg === totalPg ? "default" : "pointer", fontSize: 13 }}>다음 ▶</button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ===== FLOW ===== */}
+        {tab === "flow" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+            {FLOW_STEPS.map((s, i) => (
+              <div key={s.id} style={{ display: "flex", gap: 16 }}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: 40 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#6366f1", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 700 }}>{s.id}</div>
+                  {i < FLOW_STEPS.length - 1 && <div style={{ width: 2, flex: 1, background: "#e5e7eb", minHeight: 16 }} />}
+                </div>
+                <div style={{ flex: 1, background: "#fff", borderRadius: 12, padding: "14px 20px", marginBottom: 10, border: "1px solid #f3f4f6", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
+                  <h3 style={{ margin: 0, fontSize: 14, color: "#111827" }}>{s.icon} {s.title}</h3>
+                  <p style={{ margin: "4px 0 0", fontSize: 12, color: "#6b7280", lineHeight: 1.5 }}>{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div style={{ padding: "16px 32px", borderTop: "1px solid #e5e7eb", background: "#fff", display: "flex", justifyContent: "space-between", fontSize: 11, color: "#9ca3af" }}>
+        <span>RWA Perp Pair Updater v6 — Live Data from Sheet16</span>
+        <span>{meta.updated || ""}</span>
+      </div>
+    </div>
+  );
 }
+
+export default App;
